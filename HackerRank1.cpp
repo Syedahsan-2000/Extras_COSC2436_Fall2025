@@ -1,92 +1,125 @@
+// check Magazine function using unordered_map from lines 24-44
+
+
 #include <bits/stdc++.h>
-// This is the Code for Traversing and printing elements in a linked list
-// Print function from lines 61-68
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
 
 using namespace std;
 
-class SinglyLinkedListNode {
-    public:
-        int data;
-        SinglyLinkedListNode *next;
-
-        SinglyLinkedListNode(int node_data) {
-            this->data = node_data;
-            this->next = nullptr;
-        }
-};
-
-class SinglyLinkedList {
-    public:
-        SinglyLinkedListNode *head;
-        SinglyLinkedListNode *tail;
-
-        SinglyLinkedList() {
-            this->head = nullptr;
-            this->tail = nullptr;
-        }
-
-        void insert_node(int node_data) {
-            SinglyLinkedListNode* node = new SinglyLinkedListNode(node_data);
-
-            if (!this->head) {
-                this->head = node;
-            } else {
-                this->tail->next = node;
-            }
-
-            this->tail = node;
-        }
-};
-
-void free_singly_linked_list(SinglyLinkedListNode* node) {
-    while (node) {
-        SinglyLinkedListNode* temp = node;
-        node = node->next;
-
-        free(temp);
-    }
-}
-
-// Complete the printLinkedList function below.
+string ltrim(const string &);
+string rtrim(const string &);
+vector<string> split(const string &);
 
 /*
- * For your reference:
+ * Complete the 'checkMagazine' function below.
  *
- * SinglyLinkedListNode {
- *     int data;
- *     SinglyLinkedListNode* next;
- * };
- *
+ * The function accepts following parameters:
+ *  1. STRING_ARRAY magazine
+ *  2. STRING_ARRAY note
  */
-void printLinkedList(SinglyLinkedListNode* head) {
-    
-    while(head!=nullptr)
+
+void checkMagazine(vector<string> magazine, vector<string> note) {
+    unordered_map<string,int>freq;
+    for(string &word: magazine)
     {
-        cout<<head->data<<endl;
-        head=head->next;
+        freq[word]++;
     }
-    cout<<endl;}
+    for(string &word: note)
+    {
+        if(freq[word]==0)
+        {
+            cout<<"No";
+            return;
+        }
+        else
+        {
+            freq[word]--;
+        }
+    }
+    cout<<"Yes";
 
-
-
+}
 
 int main()
 {
-    SinglyLinkedList* llist = new SinglyLinkedList();
+    string first_multiple_input_temp;
+    getline(cin, first_multiple_input_temp);
 
-    int llist_count;
-    cin >> llist_count;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    vector<string> first_multiple_input = split(rtrim(first_multiple_input_temp));
 
-    for (int i = 0; i < llist_count; i++) {
-        int llist_item;
-        cin >> llist_item;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    int m = stoi(first_multiple_input[0]);
 
-        llist->insert_node(llist_item);
+    int n = stoi(first_multiple_input[1]);
+
+    string magazine_temp_temp;
+    getline(cin, magazine_temp_temp);
+
+    vector<string> magazine_temp = split(rtrim(magazine_temp_temp));
+
+    vector<string> magazine(m);
+
+    for (int i = 0; i < m; i++) {
+        string magazine_item = magazine_temp[i];
+
+        magazine[i] = magazine_item;
     }
 
-    printLinkedList(llist->head);
+    string note_temp_temp;
+    getline(cin, note_temp_temp);
+
+    vector<string> note_temp = split(rtrim(note_temp_temp));
+
+    vector<string> note(n);
+
+    for (int i = 0; i < n; i++) {
+        string note_item = note_temp[i];
+
+        note[i] = note_item;
+    }
+
+    checkMagazine(magazine, note);
 
     return 0;
+}
+
+string ltrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        s.begin(),
+        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
+    );
+
+    return s;
+}
+
+string rtrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
+        s.end()
+    );
+
+    return s;
+}
+
+vector<string> split(const string &str) {
+    vector<string> tokens;
+
+    string::size_type start = 0;
+    string::size_type end = 0;
+
+    while ((end = str.find(" ", start)) != string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+
+        start = end + 1;
+    }
+
+    tokens.push_back(str.substr(start));
+
+    return tokens;
 }
